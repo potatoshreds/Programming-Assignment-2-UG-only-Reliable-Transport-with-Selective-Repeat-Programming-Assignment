@@ -125,10 +125,10 @@ void A_input(struct pkt packet)
       }
     }
     else if (TRACE > 0)
-      printf ("----A: corrupted ACK is rvt, do nothing!\n"); 
+      printf ("----A: corrupted ACK is received, do nothing!\n"); 
   }
   else if (TRACE > 0)
-    printf ("----A: corrupted ACK is rvt, do nothing!\n");
+    printf ("----A: corrupted ACK is received, do nothing!\n");
 }
 
 /* called when A's timer goes off */
@@ -171,7 +171,7 @@ void A_init(void)
 
 static int expectedseqnum; /* the sequence number expected next by the receiver */
 static struct  pkt rvt[SEQSPACE]; /* an array used by B to store incoming packets before processing */
-static bool rvd[SEQSPACE]; /* array used to monitor packet reception status */
+static bool received[SEQSPACE]; /* array used to monitor packet reception status */
 
 
 /* called from layer 3, when a packet arrives for layer 4 at B*/
@@ -184,7 +184,7 @@ void B_input(struct pkt packet)
   if (!IsCorrupted(packet))
   {
     if (TRACE > 0)
-      printf("----B: packet %d is correctly rvd, send ACK!\n",packet.seqnum);
+      printf("----B: packet %d is correctly received, send ACK!\n",packet.seqnum);
     packets_received++;
 
     /* deliver to receiving application */
