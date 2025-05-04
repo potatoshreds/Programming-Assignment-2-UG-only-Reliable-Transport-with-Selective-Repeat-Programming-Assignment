@@ -39,6 +39,7 @@ bool IsCorrupted(struct pkt packet)
 
 /********* Sender (A) variables and functions ************/
 
+static struct pkt buffer[WINDOWSIZE];  /* array for storing packets waiting for ACK */
 static int windowfirst, windowlast;    /* array indexes of the first/last packet awaiting ACK */
 static int windowcount;                /* the number of packets currently awaiting an ACK */
 static int A_nextseqnum;               /* the next sequence number to be used by the sender */
@@ -111,7 +112,7 @@ void A_input(struct pkt packet)
       if (packet.acknum == buffer[windowfirst].seqnum)
       {
         /* search for the next pending ACK packet and begin timing it */
-        while (windowcount > 0 && acked[buffer[windowfirst].seqnum])
+        if (packet.acknum >= 0 && packet.acknum < SEQSPACE && !acked[packet.acknum])
         {
           windowfirst = (windowfirst + 1) % WINDOWSIZE;
           windowcount--;
@@ -157,13 +158,14 @@ void A_init(void)
   /* initialise A's window, buffer and sequence number */
   A_nextseqnum = 0;  /* A starts with seq num 0, do not change this */
   windowfirst = 0;
-  windowlast = -1;   /* windowlast is where the last packet sent is stored.
+  windowlast = -1;  /* windowlast is where the last packet sent is stored.
 		     new packets are placed in winlast + 1
 		     so initially this is set to -1
 		   */
   windowcount = 0;
+  for (int i = 0; i < SEQSPACE; i++)
+    acked[i] = false;
 }
-
 
 
 /********* Receiver (B)  variables and procedures ************/
@@ -197,7 +199,7 @@ void B_input(struct pkt packet)
     /* Ensure packets are passed to the application layer in order of arrival */
     while (received[expectedseqnum] == true)
     {
-      tolayer5(B, packet.payload);
+      tolayer5(B, rvt[expectedseqnum].payload);
       received[expectedseqnum] = false;
       expectedseqnum = (expectedseqnum + 1) % SEQSPACE;
     }
