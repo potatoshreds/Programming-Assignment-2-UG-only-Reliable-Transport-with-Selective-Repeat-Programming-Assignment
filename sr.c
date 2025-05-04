@@ -225,7 +225,18 @@ void B_input(struct pkt packet)
 void B_init(void)
 {
   expectedseqnum = 0;
+  for (int i = 0; i < SEQSPACE; i++)
+    received[i] = false;
 }
+
+while (received[expectedseqnum]) {
+  tolayer5(B, rvt[expectedseqnum].payload);
+
+  received[expectedseqnum] = false;
+
+  expectedseqnum = (expectedseqnum + 1) % SEQSPACE;
+}
+
 
 /******************************************************************************
  * The following functions need be completed only for bi-directional messages *
