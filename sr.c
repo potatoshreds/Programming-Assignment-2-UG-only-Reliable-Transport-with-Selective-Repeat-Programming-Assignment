@@ -225,14 +225,6 @@ void B_init(void)
   expectedseqnum = 0;
 }
 
-while (received[expectedseqnum]) {
-  tolayer5(B, rvt[expectedseqnum].payload);
-
-  received[expectedseqnum] = false;
-
-  expectedseqnum = (expectedseqnum + 1) % SEQSPACE;
-}
-
 
 /******************************************************************************
  * The following functions need be completed only for bi-directional messages *
