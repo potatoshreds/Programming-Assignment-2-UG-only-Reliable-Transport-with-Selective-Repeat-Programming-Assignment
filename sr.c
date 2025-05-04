@@ -199,7 +199,7 @@ void B_input(struct pkt packet)
     while (received[expectedseqnum] == true)
     {
       tolayer5(B, packet.payload);
-      received[expectedseqnum] == false;
+      received[expectedseqnum] = false;
       expectedseqnum = (expectedseqnum + 1) % SEQSPACE;
     }
 
