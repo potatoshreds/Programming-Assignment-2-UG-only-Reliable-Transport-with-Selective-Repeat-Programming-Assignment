@@ -112,7 +112,7 @@ void A_input(struct pkt packet)
       if (packet.acknum == buffer[windowfirst].seqnum)
       {
         /* search for the next pending ACK packet and begin timing it */
-        if (packet.acknum >= 0 && packet.acknum < SEQSPACE && !acked[packet.acknum])
+        while (windowcount > 0 && acked[buffer[windowfirst].seqnum])
         {
           windowfirst = (windowfirst + 1) % WINDOWSIZE;
           windowcount--;
@@ -158,12 +158,13 @@ void A_init(void)
   /* initialise A's window, buffer and sequence number */
   A_nextseqnum = 0;  /* A starts with seq num 0, do not change this */
   windowfirst = 0;
-  windowlast = -1;  /* windowlast is where the last packet sent is stored.
+  windowlast = -1;   /* windowlast is where the last packet sent is stored.
 		     new packets are placed in winlast + 1
 		     so initially this is set to -1
 		   */
   windowcount = 0;
 }
+
 
 
 /********* Receiver (B)  variables and procedures ************/
@@ -198,7 +199,7 @@ void B_input(struct pkt packet)
     while (received[expectedseqnum] == true)
     {
       tolayer5(B, packet.payload);
-      received[expectedseqnum] = false;
+      received[expectedseqnum] == false;
       expectedseqnum = (expectedseqnum + 1) % SEQSPACE;
     }
 
@@ -225,7 +226,6 @@ void B_init(void)
   expectedseqnum = 0;
 }
 
-
 /******************************************************************************
  * The following functions need be completed only for bi-directional messages *
  *****************************************************************************/
@@ -239,3 +239,4 @@ void B_output(struct msg message)
 void B_timerinterrupt(void)
 {
 }
+
