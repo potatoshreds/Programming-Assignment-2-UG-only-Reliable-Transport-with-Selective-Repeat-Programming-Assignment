@@ -223,8 +223,6 @@ void B_input(struct pkt packet)
 void B_init(void)
 {
   expectedseqnum = 0;
-  for (int i = 0; i < SEQSPACE; i++)
-    received[i] = false;
 }
 
 while (received[expectedseqnum]) {
