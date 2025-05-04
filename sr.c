@@ -134,6 +134,10 @@ void A_input(struct pkt packet)
 /* called when A's timer goes off */
 void A_timerinterrupt(void)
 {
+
+  if (TRACE > 0)
+    printf("----A: time out,resend packets!\n");
+
   /* Resend just the earliest packet in the window that hasn't been acknowledged */
   if (TRACE > 0)
     printf("---A:resending packet %d\n", buffer[windowfirst].seqnum);
