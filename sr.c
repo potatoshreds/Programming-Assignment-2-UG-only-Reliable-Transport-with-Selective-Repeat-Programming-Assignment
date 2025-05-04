@@ -197,7 +197,7 @@ void B_input(struct pkt packet)
     /* Ensure packets are passed to the application layer in order of arrival */
     while (received[expectedseqnum] == true)
     {
-      tolayer5(B, rvt[expectedseqnum].payload);
+      tolayer5(B, packet.payload);
       received[expectedseqnum] = false;
       expectedseqnum = (expectedseqnum + 1) % SEQSPACE;
     }
